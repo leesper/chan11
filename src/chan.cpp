@@ -1,7 +1,7 @@
 #include <exception>
 #include "chan.h"
-using namespace chan11;
 
+namespace chan11 {
 
 BufferedChan::BufferedChan(size_t cap) :
 		capacity_(cap)
@@ -92,3 +92,15 @@ void Chan::send(int e)
 {
 	chan_->send(e);
 }
+
+Chan make_chan(int cap)
+{
+	return Chan(cap);
+}
+
+Chan make_chan()
+{
+	return Chan();
+}
+
+} // namespace chan11

@@ -11,43 +11,15 @@ namespace chan11
 // TODO: channel can be closed
 class BaseChan
 {
-	friend class Chan;
-protected:
+public:
 	virtual ~BaseChan() = default;
-	std::mutex mtx_;
-	std::condition_variable write_cond_;
-	std::condition_variable read_cond_;
-private:
 	virtual int recv() = 0;
 	virtual void send(int) = 0;
 	virtual bool buffered() const = 0;
-};
-
-class BufferedChan : public BaseChan
-{
-	friend class Chan;
 protected:
-	virtual int recv() override;
-	virtual void send(int) override;
-	virtual bool buffered() const override { return true; }
-private:
-	BufferedChan(size_t cap);
-	size_t size() const { return queue_->size(); }
-	size_t capacity() const { return capacity_; }
-	size_t capacity_;
-	std::shared_ptr<std::deque<int>> queue_;
-};
-
-class UnbufferedChan : public BaseChan
-{
-	friend class Chan;
-private:
-	virtual int recv() override;
-	virtual void send(int) override;
-	virtual bool buffered() const override { return false; }
-protected:
-	bool avail_ = false;
-	std::shared_ptr<int> data_;
+	std::mutex mtx_;
+	std::condition_variable write_cond_;
+	std::condition_variable read_cond_;
 };
 
 // this class serves as the interface and hide the hierarchy
@@ -61,6 +33,34 @@ public:
 	void send(int);
 private:
 	std::shared_ptr<BaseChan> chan_;
+};
+
+class BufferedChan : public BaseChan
+{
+	friend class Chan;
+public:
+	BufferedChan(size_t cap);
+private:
+	virtual int recv() override;
+	virtual void send(int) override;
+	virtual bool buffered() const override { return true; }
+	size_t size() const { return queue_->size(); }
+	size_t capacity() const { return capacity_; }
+	size_t capacity_;
+	std::shared_ptr<std::deque<int>> queue_;
+};
+
+class UnbufferedChan : public BaseChan
+{
+	friend class Chan;
+public:
+	UnbufferedChan() = default;
+private:
+	virtual int recv() override;
+	virtual void send(int) override;
+	virtual bool buffered() const override { return false; }
+	bool avail_ = false;
+	std::shared_ptr<int> data_;
 };
 
 Chan make_chan(int);

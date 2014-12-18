@@ -5,7 +5,7 @@ UNAME := $(shell uname)
 
 AR ?= ar
 CC ?= g++
-CPPFLAGS = -std=c++11 -Wall -lpthread
+CPPFLAGS = -std=c++11 -lpthread
 
 ifeq ($(APP_DEBUG), true)
 	CPPFLAGS += -g -O0
@@ -37,7 +37,7 @@ clean:
 
 test: build
 	mkdir -p $(BUILD)/tests
-	$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp -Lbuild/lib -lchan -pthread
+	g++ $(CPPFLAGS) -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp ./src/chan.cpp -Lbuild/lib -lchan
 	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/unbuffered $(EXAMPLES)/unbuffered.c -Lbuild/lib -lchan -pthread
 	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/close $(EXAMPLES)/close.c -Lbuild/lib -lchan -pthread
 	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/select $(EXAMPLES)/select.c -Lbuild/lib -lchan -pthread
