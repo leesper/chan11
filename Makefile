@@ -4,7 +4,6 @@ TESTS ?= tests
 UNAME := $(shell uname)
 
 AR ?= ar
-CC ?= g++
 CPPFLAGS = -std=c++11 -lpthread
 
 ifeq ($(APP_DEBUG), true)
@@ -15,13 +14,13 @@ endif
 
 PREFIX ?= /usr/local
 
-SRCS += $(wildcard $(SRC)/*.c)
+SRCS += $(wildcard $(SRC)/*.cpp)
 
-OBJS += $(SRCS:.c=.o)
+OBJS += $(SRCS:.cpp=.o)
 
 all: build
 
-%.o: %.c
+%.o: %.cpp
 	$(CC) $< $(CPPFLAGS) -c -o $@
 
 build: $(BUILD)/lib/libchan.a
@@ -37,7 +36,7 @@ clean:
 
 test: build
 	mkdir -p $(BUILD)/tests
-	g++ $(CPPFLAGS) -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp ./src/chan.cpp -Lbuild/lib -lchan
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp -Lbuild/lib -lchan
 	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/unbuffered $(EXAMPLES)/unbuffered.c -Lbuild/lib -lchan -pthread
 	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/close $(EXAMPLES)/close.c -Lbuild/lib -lchan -pthread
 	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/select $(EXAMPLES)/select.c -Lbuild/lib -lchan -pthread

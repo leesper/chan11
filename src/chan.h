@@ -11,8 +11,10 @@ namespace chan11
 // TODO: channel can be closed
 class BaseChan
 {
+	friend class Chan;
 public:
 	virtual ~BaseChan() = default;
+private:
 	virtual int recv() = 0;
 	virtual void send(int) = 0;
 	virtual bool buffered() const = 0;
