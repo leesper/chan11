@@ -14,7 +14,7 @@ BufferedChan::BufferedChan(size_t cap) :
 
 int BufferedChan::recv()
 {
-	std::unique_lock u_lock(mtx_);
+	std::unique_lock<std::mutex> u_lock(mtx_);
 
 	while (queue_->empty())
 	{
@@ -31,7 +31,7 @@ int BufferedChan::recv()
 
 void BufferedChan::send(int e)
 {
-	std::unique_lock u_lock(mtx_);
+	std::unique_lock<std::mutex> u_lock(mtx_);
 
 	while (queue_->size() == capacity_)
 	{
@@ -44,13 +44,13 @@ void BufferedChan::send(int e)
 
 int UnbufferedChan::recv()
 {
-	std::unique_lock u_lock(mtx_);
+	std::unique_lock<std::mutex> u_lock(mtx_);
 	while (!avail_)
 	{
 		read_cond_.wait(u_lock);
 	}
 
-	int element = data_;
+	int element = *data_;
 	avail_ = false;
 
 	u_lock.unlock();
@@ -61,14 +61,14 @@ int UnbufferedChan::recv()
 
 void UnbufferedChan::send(int e)
 {
-	std::unique_lock u_lock(mtx_);
+	std::unique_lock<std::mutex> u_lock(mtx_);
 
 	while (avail_)
 	{
 		write_cond_.wait(u_lock);
 	}
 
-	data_ = e;
+	*data_ = e;
 	avail_ = true;
 
 	u_lock.unlock();

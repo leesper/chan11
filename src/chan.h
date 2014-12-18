@@ -13,7 +13,7 @@ class BaseChan
 {
 	friend class Chan;
 protected:
-	virtual ~BaseChan();
+	virtual ~BaseChan() = default;
 	std::mutex mtx_;
 	std::condition_variable write_cond_;
 	std::condition_variable read_cond_;
@@ -25,23 +25,23 @@ private:
 
 class BufferedChan : public BaseChan
 {
+	friend class Chan;
 protected:
-	BufferedChan() = delete;
-	BufferedChan(size_t cap);
 	virtual int recv() override;
 	virtual void send(int) override;
 	virtual bool buffered() const override { return true; }
+private:
+	BufferedChan(size_t cap);
 	size_t size() const { return queue_->size(); }
 	size_t capacity() const { return capacity_; }
 	size_t capacity_;
-protected:
 	std::shared_ptr<std::deque<int>> queue_;
 };
 
 class UnbufferedChan : public BaseChan
 {
-protected:
-	UnbufferedChan() = default;
+	friend class Chan;
+private:
 	virtual int recv() override;
 	virtual void send(int) override;
 	virtual bool buffered() const override { return false; }
