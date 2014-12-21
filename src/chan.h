@@ -9,16 +9,25 @@ namespace chan11
 {
 
 // TODO: channel can be closed
+enum errcode_t
+{
+	esucc = 0,
+	epipe = -(esucc + 1)
+};
+
 class BaseChan
 {
 	friend class Chan;
 public:
 	virtual ~BaseChan() = default;
 private:
-	virtual int recv() = 0;
-	virtual void send(int) = 0;
+	virtual errcode_t recv(int&) = 0;
+	virtual errcode_t send(int) = 0;
 	virtual bool buffered() const = 0;
 protected:
+	errcode_t close();
+	bool closed();
+	bool closed_ = false;
 	std::mutex mtx_;
 	std::condition_variable write_cond_;
 	std::condition_variable read_cond_;
@@ -31,8 +40,8 @@ class Chan
 public:
 	Chan(int);
 	Chan();
-	int recv();
-	void send(int);
+	errcode_t recv(int&);
+	errcode_t send(int);
 private:
 	std::shared_ptr<BaseChan> chan_;
 };
@@ -43,11 +52,11 @@ class BufferedChan : public BaseChan
 public:
 	BufferedChan(size_t cap);
 private:
-	virtual int recv() override;
-	virtual void send(int) override;
+	virtual errcode_t recv(int&) override;
+	virtual errcode_t send(int) override;
 	virtual bool buffered() const override { return true; }
-	size_t size() const { return queue_->size(); }
-	size_t capacity() const { return capacity_; }
+	size_t size();
+	size_t capacity();
 	size_t capacity_;
 	std::shared_ptr<std::deque<int>> queue_;
 };
@@ -58,8 +67,8 @@ class UnbufferedChan : public BaseChan
 public:
 	UnbufferedChan() = default;
 private:
-	virtual int recv() override;
-	virtual void send(int) override;
+	virtual errcode_t recv(int&) override;
+	virtual errcode_t send(int) override;
 	virtual bool buffered() const override { return false; }
 	bool avail_ = false;
 	std::shared_ptr<int> data_;
