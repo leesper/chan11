@@ -8,7 +8,6 @@
 namespace chan11
 {
 
-// TODO: channel can be closed
 enum errcode_t
 {
 	esucc = 0,
@@ -42,6 +41,7 @@ public:
 	Chan();
 	errcode_t recv(int&);
 	errcode_t send(int);
+	errcode_t close();
 private:
 	std::shared_ptr<BaseChan> chan_;
 };
@@ -65,7 +65,7 @@ class UnbufferedChan : public BaseChan
 {
 	friend class Chan;
 public:
-	UnbufferedChan() = default;
+	UnbufferedChan(): data_(std::make_shared<int>()) {}
 private:
 	virtual errcode_t recv(int&) override;
 	virtual errcode_t send(int) override;
@@ -76,5 +76,7 @@ private:
 
 Chan make_chan(int);
 Chan make_chan();
+// TODO: add block and nonblock select feature
+// TODO: make Chan a class template
 } // chan11
 #endif//CHAN_H

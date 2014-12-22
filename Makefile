@@ -37,7 +37,7 @@ clean:
 test: build
 	mkdir -p $(BUILD)/tests
 	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp -Lbuild/lib -lchan
-	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/unbuffered $(EXAMPLES)/unbuffered.c -Lbuild/lib -lchan -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/unbuffered $(TESTS)/unbuffered.cpp -Lbuild/lib -lchan -pthread
 	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/close $(EXAMPLES)/close.c -Lbuild/lib -lchan -pthread
 	#$(CC) $(CPPFLAGS) -I$(build)/include -o $(BUILD)/examples/select $(EXAMPLES)/select.c -Lbuild/lib -lchan -pthread
 

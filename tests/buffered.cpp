@@ -9,11 +9,11 @@ int main()
 	ch.send(1);
 	ch.send(2);
 
-	int res1, res2;
-	ch.recv(res1);
-	ch.recv(res2);
-	cout << "first element: " << res1 << endl;
-	cout << "second element: " << res2 << endl;
+	int res;
+	ch.recv(res);
+	cout << "first element: " << res << endl;
+	ch.recv(res);
+	cout << "second element: " << res << endl;
 
 	return 0;
 }

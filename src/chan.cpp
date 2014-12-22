@@ -141,6 +141,11 @@ errcode_t Chan::send(int e)
 	return chan_->send(e);
 }
 
+errcode_t Chan::close()
+{
+	return chan_->close();
+}
+
 Chan make_chan(int cap)
 {
 	return Chan(cap);
