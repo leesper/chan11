@@ -15,5 +15,14 @@ int main()
 	ch.recv(res);
 	cout << "second element: " << res << endl;
 
+	ch.send(3);
+	ch.close();
+	ch.recv(res);
+	cout << "third element: " << res << endl;
+	if (ch.send(4) == epipe)
+	{
+		cout << "chan closed, can't send" << endl;
+	}
+
 	return 0;
 }

@@ -11,6 +11,10 @@ void ping(Chan &ch)
 	for (int i = 0; i !=10; ++i)
 		ch.send(i);
 	ch.close();
+	if (ch.send(20) == epipe)
+	{
+		cout << "chan closed, can't send" << endl;
+	}
 }
 
 int main()
