@@ -5,12 +5,17 @@ namespace chan11 {
 
 errcode_t BaseChan::close()
 {
-	std::lock_guard<std::mutex> lg(mtx_);
+	std::unique_lock<std::mutex> u_lock(mtx_);
 
 	if (closed_)
 		return epipe;
 
 	closed_ = true;
+	u_lock.unlock();
+
+	read_cond_.notify_all();
+	write_cond_.notify_all();
+
 	return esucc;
 }
 
