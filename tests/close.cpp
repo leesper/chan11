@@ -5,7 +5,7 @@
 using namespace std;
 using namespace chan11;
 
-void worker(Chan &jobs, Chan &done)
+void worker(Chan<int> &jobs, Chan<int> &done)
 {
 	int j;
 	while (jobs.recv(j) == esucc)
@@ -19,8 +19,8 @@ void worker(Chan &jobs, Chan &done)
 
 int main()
 {
-	Chan jobs = make_chan(6);
-	Chan done = make_chan();
+	Chan<int> jobs = make_chan<int>(6);
+	Chan<int> done = make_chan<int>();
 
 	std::thread worker_thread(worker, std::ref(jobs), std::ref(done));
 	worker_thread.detach();

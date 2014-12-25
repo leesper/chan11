@@ -5,7 +5,7 @@ using namespace chan11;
 
 int main()
 {
-	Chan ch = make_chan(2);
+	Chan<int> ch = make_chan<int>(2);
 	ch.send(1);
 	ch.send(2);
 

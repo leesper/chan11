@@ -6,13 +6,13 @@
 using namespace std;
 using namespace chan11;
 
-void thread_func1(Chan &ch)
+void thread_func1(Chan<int> &ch)
 {
 	std::this_thread::sleep_for(std::chrono::seconds(3));
 	ch.send(1);
 }
 
-void thread_func2(Chan &ch)
+void thread_func2(Chan<int> &ch)
 {
 	std::this_thread::sleep_for(std::chrono::seconds(2));
 	ch.send(2);
@@ -20,16 +20,16 @@ void thread_func2(Chan &ch)
 
 int main()
 {
-	Chan ch1 = make_chan();
-	Chan ch2 = make_chan();
+	Chan<int> ch1 = make_chan<int>();
+	Chan<int> ch2 = make_chan<int>();
 	std::thread thread1(thread_func1, std::ref(ch1));
 	std::thread thread2(thread_func2, std::ref(ch2));
 	thread1.detach();
 	thread2.detach();
 
-	rCase case1(ch1);
-	rCase case2(ch2);
-	vector<shared_ptr<Case>> cases = { make_shared<rCase>(ch1), make_shared<rCase>(ch2) };
+	rCase<int> case1(ch1);
+	rCase<int> case2(ch2);
+	vector<shared_ptr<Case<int>>> cases = { make_shared<rCase<int>>(ch1), make_shared<rCase<int>>(ch2) };
 	switch(chan_select(cases, true))
 	{
 	case 0:

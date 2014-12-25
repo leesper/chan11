@@ -23,32 +23,25 @@ all: build
 %.o: %.cpp
 	$(CC) $< $(CPPFLAGS) -c -o $@
 
-build: $(BUILD)/lib/libchan.a
+build:
 	mkdir -p $(BUILD)/include/chan
 	cp -f $(SRC)/chan.h $(BUILD)/include/chan/chan.h
-
-$(BUILD)/lib/libchan.a: $(OBJS)
-	mkdir -p $(BUILD)/lib
-	$(AR) -crs $@ $^
 
 clean:
 	rm -rf *.o $(BUILD) $(SRC)/*.o test
 
 test: build
 	mkdir -p $(BUILD)/tests
-	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp -Lbuild/lib -lchan -pthread
-	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/unbuffered $(TESTS)/unbuffered.cpp -Lbuild/lib -lchan -pthread
-	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/close $(TESTS)/close.cpp -Lbuild/lib -lchan -pthread
-	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/select $(TESTS)/select.cpp -Lbuild/lib -lchan -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/unbuffered $(TESTS)/unbuffered.cpp -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/close $(TESTS)/close.cpp -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/select $(TESTS)/select.cpp -pthread
 
 install: all
 	mkdir -p $(PREFIX)/include/chan
-	mkdir -p $(PREFIX)/lib
 	cp -f $(SRC)/chan.h $(PREFIX)/include/chan/chan.h
-	cp -f $(BUILD)/lib/libchan.a $(PREFIX)/lib/libchan.a
 
 uninstall:
 	rm -rf $(PREFIX)/include/chan/chan.h
-	rm -rf $(PREFIX)/lib/libchan.a
 
 .PHONY: build check test clean install uninstall
