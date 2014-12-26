@@ -32,10 +32,10 @@ clean:
 
 test: build
 	mkdir -p $(BUILD)/tests
-	#g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp -pthread
-	#g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/unbuffered $(TESTS)/unbuffered.cpp -pthread
-	#g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/close $(TESTS)/close.cpp -pthread
-	#g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/select $(TESTS)/select.cpp -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/buffered $(TESTS)/buffered.cpp -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/unbuffered $(TESTS)/unbuffered.cpp -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/close $(TESTS)/close.cpp -pthread
+	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/select $(TESTS)/select.cpp -pthread
 	g++ $(CPPFLAGS) -I$(build)/include -o $(BUILD)/tests/rolling $(TESTS)/rolling.cpp -g -O0 -pthread
 
 install: all

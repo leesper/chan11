@@ -5,6 +5,10 @@
 #include <memory>
 #include <condition_variable>
 #include <mutex>
+#include <random>
+#include <algorithm>
+
+#include <iostream>
 
 namespace chan11
 {
@@ -378,15 +382,21 @@ int chan_select(std::vector<std::shared_ptr<Case<T>>> &cases, bool blocked = tru
 
 	if (cases.empty()) return index;
 
+	auto rand_cases = cases;
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	std::shuffle(rand_cases.begin(), rand_cases.end(), gen);
 	if (!blocked)
 	{
-		// TODO: random in range [0..cases.size()-1]
-		for (auto i = 0; i != cases.size(); ++i)
+		for (auto rc : rand_cases)
 		{
-			if (cases[i]->ready())
+			if (rc->ready())
 			{
-				index = i;
-				cases[i]->exec();
+				auto iter = std::find(cases.begin(), cases.end(), rc);
+				index = iter - cases.begin();
+				rc->exec();
 				return index;
 			}
 		}
@@ -395,13 +405,13 @@ int chan_select(std::vector<std::shared_ptr<Case<T>>> &cases, bool blocked = tru
 	{
 		while (true)
 		{
-			// TODO
-			for (auto i = 0; i != cases.size(); ++i)
+			for (auto rc : rand_cases)
 			{
-				if (cases[i]->ready())
+				if (rc->ready())
 				{
-					index = i;
-					cases[i]->exec();
+					auto iter = std::find(cases.begin(), cases.end(), rc);
+					index = iter - cases.begin();
+					rc->exec();
 					return index;
 				}
 			}
