@@ -27,8 +27,6 @@ int main()
 	thread1.detach();
 	thread2.detach();
 
-	rCase<int> case1(ch1);
-	rCase<int> case2(ch2);
 	vector<shared_ptr<Case<int>>> cases = { make_shared<rCase<int>>(ch1), make_shared<rCase<int>>(ch2) };
 	switch(chan_select(cases, true))
 	{

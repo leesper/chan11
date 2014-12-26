@@ -166,7 +166,7 @@ template <typename T> class UnbufferedChan : public BaseChan<T>
 {
 	friend class Chan<T>;
 public:
-	UnbufferedChan(): data_(std::make_shared<int>()) {}
+	UnbufferedChan(): data_(std::make_shared<T>()) {}
 	virtual ~UnbufferedChan() {}
 private:
 	virtual errcode_t recv(T&) override;
