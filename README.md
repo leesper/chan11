@@ -1,6 +1,7 @@
 chan11
 ======
 
+类Go语言消息通道 - 现代C++实现（C++11）
 A Golang-like channels implementation based on C++11
 
 ## Unbuffered Channels
@@ -198,11 +199,10 @@ using namespace chan11;
 
 void rolling(vector<Chan<bool>> &channels)
 {
-	//while (true)
-		for (auto &ch : channels)
-		{
-			ch.send(true);
-		}
+	for (auto &ch : channels)
+	{
+		ch.send(true);
+	}
 }
 
 int main()

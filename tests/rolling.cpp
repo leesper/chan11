@@ -8,11 +8,10 @@ using namespace chan11;
 
 void rolling(vector<Chan<bool>> &channels)
 {
-	//while (true)
-		for (auto &ch : channels)
-		{
-			ch.send(true);
-		}
+	for (auto &ch : channels)
+	{
+		ch.send(true);
+	}
 }
 
 int main()
